@@ -1,0 +1,9 @@
+C:\Users\Dawid\documents\visual studio 2013\Projects\apbstat\apbstat\bin\Release\apbstat.exe.config
+C:\Users\Dawid\documents\visual studio 2013\Projects\apbstat\apbstat\bin\Release\apbstat.exe
+C:\Users\Dawid\documents\visual studio 2013\Projects\apbstat\apbstat\bin\Release\apbstat.pdb
+C:\Users\Dawid\documents\visual studio 2013\Projects\apbstat\apbstat\bin\Release\MySql.Data.dll
+C:\Users\Dawid\documents\visual studio 2013\Projects\apbstat\apbstat\obj\Release\apbstat.Form1.resources
+C:\Users\Dawid\documents\visual studio 2013\Projects\apbstat\apbstat\obj\Release\apbstat.Properties.Resources.resources
+C:\Users\Dawid\documents\visual studio 2013\Projects\apbstat\apbstat\obj\Release\apbstat.csproj.GenerateResource.Cache
+C:\Users\Dawid\documents\visual studio 2013\Projects\apbstat\apbstat\obj\Release\apbstat.exe
+C:\Users\Dawid\documents\visual studio 2013\Projects\apbstat\apbstat\obj\Release\apbstat.pdb
