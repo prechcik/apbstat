@@ -14,7 +14,7 @@
         string uname;
         string path;
         bool logged = false;
-        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer(); // create a new timer
+        Timer timer = new Timer(); // create a new timer
 
         public Form1()
         {
@@ -32,7 +32,7 @@
 
         public void button1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            var openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Filter = "Log Files|*.log";
             openFileDialog1.Title = "Select a TempChatSessionFile.log file inside APB/APGGame/Logs";
             dialog = openFileDialog1;
@@ -62,9 +62,9 @@
             stream.Close();
             //testtest
             textBox1.AppendText(DateTime.Now.ToString("HH:mm:ss") + " - Reading... \n Found " + kills + " kills, " + assists + " assists and " + medals + " medals! Saving into the database!\n");
-            using (WebClient client = new WebClient())
+            using (var client = new WebClient())
             {
-                string htmlCode = client.DownloadString("http://www.prechcik.pl/apbinsert.php?user=" + userName + "&kills=" + kills + "&assists=" + assists + "&medals= " + medals);
+                var htmlCode = client.DownloadString("http://www.prechcik.pl/apbinsert.php?user=" + userName + "&kills=" + kills + "&assists=" + assists + "&medals= " + medals);
             }
         }
 
@@ -73,8 +73,7 @@
         {
             string line;
             var total = 0;
-            System.IO.StreamReader file =
-            new System.IO.StreamReader(@path, System.Text.Encoding.UTF8);
+            var file = new StreamReader(@path, Encoding.UTF8);
 
 
             while ((line = file.ReadLine()) != null)
@@ -93,19 +92,19 @@
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            string usr = userName.Text;
-            string pwd = password.Text;
+            var usr = userName.Text;
+            var pwd = password.Text;
 
             Properties.Settings.Default.userName = usr;
             Properties.Settings.Default.passWord = pwd;
 
             pwd = CreateMD5(pwd);
 
-            using (WebClient client = new WebClient())
+            using (var client = new WebClient())
             {
 
 
-                string htmlCode = client.DownloadString("http://www.prechcik.pl/checkapb.php?user=" + usr + "&password=" + pwd);
+                var htmlCode = client.DownloadString("http://www.prechcik.pl/checkapb.php?user=" + usr + "&password=" + pwd);
                 if (htmlCode != "")
                 {
                     serverStatus.Text = "Status: Login failed. Username or password may be wrong.";
@@ -123,13 +122,13 @@
         public static string CreateMD5(string input)
         {
             // Use input string to calculate MD5 hash
-            MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-            byte[] hashBytes = md5.ComputeHash(inputBytes);
+            var md5 = MD5.Create();
+            var inputBytes = Encoding.ASCII.GetBytes(input);
+            var hashBytes = md5.ComputeHash(inputBytes);
 
             // Convert the byte array to hexadecimal string
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hashBytes.Length; i++)
+            var sb = new StringBuilder();
+            for (var i = 0; i < hashBytes.Length; i++)
             {
                 sb.Append(hashBytes[i].ToString("X2"));
             }
