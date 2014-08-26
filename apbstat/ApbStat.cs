@@ -1,4 +1,4 @@
-﻿namespace apbstat
+﻿namespace Prechcik.ApbStat
 {
     using System;
     using System.Globalization;
