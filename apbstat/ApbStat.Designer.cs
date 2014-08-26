@@ -1,6 +1,6 @@
-﻿namespace apbstat
+﻿namespace Prechcik.ApbStat
 {
-    partial class Form1
+    partial class ApbStat
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApbStat));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.userName = new System.Windows.Forms.TextBox();
@@ -63,7 +63,7 @@
             this.button1.TabIndex = 3;
             this.button1.Text = "Select File";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1Click);
             // 
             // userName
             // 
@@ -103,7 +103,7 @@
             this.regButton.TabIndex = 7;
             this.regButton.Text = "Register";
             this.regButton.UseVisualStyleBackColor = true;
-            this.regButton.Click += new System.EventHandler(this.regButton_Click);
+            this.regButton.Click += new System.EventHandler(this.RegButtonClick);
             // 
             // loginButton
             // 
@@ -113,7 +113,7 @@
             this.loginButton.TabIndex = 6;
             this.loginButton.Text = "Log in";
             this.loginButton.UseVisualStyleBackColor = true;
-            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
+            this.loginButton.Click += new System.EventHandler(this.LoginButtonClick);
             // 
             // serverStatus
             // 
@@ -158,7 +158,7 @@
             this.button2.TabIndex = 10;
             this.button2.Text = "Start";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2Click);
             // 
             // button3
             // 
@@ -168,7 +168,7 @@
             this.button3.TabIndex = 11;
             this.button3.Text = "Stop";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.Button3Click);
             // 
             // Form1
             // 
