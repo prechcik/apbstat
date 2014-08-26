@@ -9,12 +9,12 @@
 
     public partial class Form1 : Form
     {
-        OpenFileDialog dialog;
-        TextBox txtbox;
-        string uname;
-        string path;
-        bool logged = false;
-        Timer timer = new Timer(); // create a new timer
+        private readonly TextBox txtbox;
+        private readonly string uname;
+        private readonly Timer timer = new Timer(); // create a new timer
+        private OpenFileDialog dialog;
+        private string path;
+        private bool logged;
 
         public Form1()
         {
@@ -28,35 +28,14 @@
             pathBox.Text = path;
         }
 
-        public void button1_Click(object sender, EventArgs e)
-        {
-            var openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "Log Files|*.log";
-            openFileDialog1.Title = "Select a TempChatSessionFile.log file inside APB/APGGame/Logs";
-            dialog = openFileDialog1;
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                Properties.Settings.Default.filePath = openFileDialog1.FileName;
-                Properties.Settings.Default.Save();
-                path = openFileDialog1.FileName;
-                pathBox.Text = path;
-            }
-        }
-
-        void tickk(object sender, EventArgs e)
-        {
-            tick2(dialog, txtbox, uname, path);
-        }
-
-        static void tick2(OpenFileDialog openFileDialog, TextBox textBox1, string userName, string path)
+        private static void tick2(OpenFileDialog openFileDialog, TextBox textBox1, string userName, string path)
         {
             var kills = read(path, "Kill Reward");
             var assists = read(path, "Assist Reward");
             var medals = read(path, "Medal Awarded");
             Stream stream = File.Open(@path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             stream.Close();
-            
+
             //testtest
             textBox1.AppendText(DateTime.Now.ToString("HH:mm:ss") + " - Reading... \n Found " + kills + " kills, " + assists + " assists and " + medals + " medals! Saving into the database!\n");
 
@@ -66,7 +45,7 @@
             }
         }
 
-        static string read(string path, string word)
+        private static string read(string path, string word)
         {
             string line;
             var total = 0;
@@ -112,7 +91,7 @@
             }
         }
 
-        public static string CreateMD5(string input)
+        private static string CreateMD5(string input)
         {
             // Use input string to calculate MD5 hash
             var md5 = MD5.Create();
@@ -126,8 +105,29 @@
             {
                 sb.Append(hashBytes[i].ToString("X2"));
             }
-            
+
             return sb.ToString();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "Log Files|*.log";
+            openFileDialog1.Title = "Select a TempChatSessionFile.log file inside APB/APGGame/Logs";
+            dialog = openFileDialog1;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Properties.Settings.Default.filePath = openFileDialog1.FileName;
+                Properties.Settings.Default.Save();
+                path = openFileDialog1.FileName;
+                pathBox.Text = path;
+            }
+        }
+
+        private void tickk(object sender, EventArgs e)
+        {
+            tick2(dialog, txtbox, uname, path);
         }
 
         private void regButton_Click(object sender, EventArgs e)
