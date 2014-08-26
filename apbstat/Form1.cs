@@ -29,11 +29,11 @@
             pathBox.Text = path;
         }
 
-        private static void tick2(OpenFileDialog openFileDialog, TextBoxBase textBox1, string userName, string path)
+        private static void Tick2(OpenFileDialog openFileDialog, TextBoxBase textBox1, string userName, string path)
         {
-            var kills = read(path, "Kill Reward");
-            var assists = read(path, "Assist Reward");
-            var medals = read(path, "Medal Awarded");
+            var kills = Read(path, "Kill Reward");
+            var assists = Read(path, "Assist Reward");
+            var medals = Read(path, "Medal Awarded");
             Stream stream = File.Open(@path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             stream.Close();
 
@@ -46,7 +46,7 @@
             }
         }
 
-        private static string read(string path, string word)
+        private static string Read(string path, string word)
         {
             string line;
             var total = 0;
@@ -65,7 +65,7 @@
             return total.ToString(CultureInfo.InvariantCulture);
         }
 
-        private static string CreateMD5(string input)
+        private static string CreateMd5(string input)
         {
             // Use input string to calculate MD5 hash
             var md5 = MD5.Create();
@@ -83,7 +83,7 @@
             return sb.ToString();
         }
 
-        private void loginButton_Click(object sender, EventArgs e)
+        private void LoginButtonClick(object sender, EventArgs e)
         {
             var usr = userName.Text;
             var pwd = password.Text;
@@ -91,7 +91,7 @@
             Properties.Settings.Default.userName = usr;
             Properties.Settings.Default.passWord = pwd;
 
-            pwd = CreateMD5(pwd);
+            pwd = CreateMd5(pwd);
 
             using (var client = new WebClient())
             {
@@ -110,7 +110,7 @@
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1Click(object sender, EventArgs e)
         {
             var openFileDialog1 = new OpenFileDialog
             {
@@ -130,17 +130,17 @@
             pathBox.Text = path;
         }
 
-        private void tickk(object sender, EventArgs e)
+        private void Tickk(object sender, EventArgs e)
         {
-            tick2(dialog, txtbox, uname, path);
+            Tick2(dialog, txtbox, uname, path);
         }
 
-        private void regButton_Click(object sender, EventArgs e)
+        private void RegButtonClick(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("http://www.apbstat.prechcik.pl/register.php");
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2Click(object sender, EventArgs e)
         {
             if (logged == false)
             {
@@ -149,13 +149,13 @@
             else
             {
                 timer.Interval = 15000; // 300000 = 5 minutes
-                timer.Tick += tickk; // add the event handler
+                timer.Tick += Tickk; // add the event handler
                 timer.Start(); // start the timer
                 textBox1.AppendText("Starting..\n\n");
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Button3Click(object sender, EventArgs e)
         {
             timer.Stop();
             textBox1.AppendText("Stopped.\n");
