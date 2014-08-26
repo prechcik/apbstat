@@ -38,11 +38,11 @@
             stream.Close();
 
             // testtest
-            textBox1.AppendText(DateTime.Now.ToString("HH:mm:ss") + " - Reading... \n Found " + kills + " kills, " + assists + " assists and " + medals + " medals! Saving into the database!\n");
+            textBox1.AppendText(string.Format("{0} - Reading... \n Found {1} kills, {2} assists and {3} medals! Saving into the database!\n", DateTime.Now.ToString("HH:mm:ss"), kills, assists, medals));
 
             using (var client = new WebClient())
             {
-                var htmlCode = client.DownloadString("http://www.prechcik.pl/apbinsert.php?user=" + userName + "&kills=" + kills + "&assists=" + assists + "&medals= " + medals);
+                var htmlCode = client.DownloadString(string.Format("http://www.prechcik.pl/apbinsert.php?user={0}&kills={1}&assists={2}&medals= {3}", userName, kills, assists, medals));
             }
         }
 
@@ -95,7 +95,7 @@
 
             using (var client = new WebClient())
             {
-                var htmlCode = client.DownloadString("http://www.prechcik.pl/checkapb.php?user=" + usr + "&password=" + pwd);
+                var htmlCode = client.DownloadString(string.Format("http://www.prechcik.pl/checkapb.php?user={0}&password={1}", usr, pwd));
 
                 if (string.IsNullOrWhiteSpace(htmlCode))
                 {
