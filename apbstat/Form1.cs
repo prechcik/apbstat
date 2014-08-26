@@ -65,6 +65,24 @@
             return total.ToString(CultureInfo.InvariantCulture);
         }
 
+        private static string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            var md5 = MD5.Create();
+            var inputBytes = Encoding.ASCII.GetBytes(input);
+            var hashBytes = md5.ComputeHash(inputBytes);
+
+            // Convert the byte array to hexadecimal string
+            var sb = new StringBuilder();
+
+            foreach (var hashByte in hashBytes)
+            {
+                sb.Append(hashByte.ToString("X2"));
+            }
+
+            return sb.ToString();
+        }
+
         private void loginButton_Click(object sender, EventArgs e)
         {
             var usr = userName.Text;
@@ -90,24 +108,6 @@
                     logged = true;
                 }
             }
-        }
-
-        private static string CreateMD5(string input)
-        {
-            // Use input string to calculate MD5 hash
-            var md5 = MD5.Create();
-            var inputBytes = Encoding.ASCII.GetBytes(input);
-            var hashBytes = md5.ComputeHash(inputBytes);
-
-            // Convert the byte array to hexadecimal string
-            var sb = new StringBuilder();
-
-            foreach (var hashByte in hashBytes)
-            {
-                sb.Append(hashByte.ToString("X2"));
-            }
-
-            return sb.ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
