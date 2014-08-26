@@ -33,8 +33,8 @@ namespace apbstat
             uname = userName.Text;
             path = Properties.Settings.Default.filePath;
             pathBox.Text = path;
-            
-            
+
+
         }
 
         public void button1_Click(object sender, EventArgs e)
@@ -44,21 +44,21 @@ namespace apbstat
             openFileDialog1.Title = "Select a TempChatSessionFile.log file inside APB/APGGame/Logs";
             dialog = openFileDialog1;
 
-           
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    Properties.Settings.Default.filePath = openFileDialog1.FileName;
-                    Properties.Settings.Default.Save();
-                    path = openFileDialog1.FileName;
-                    pathBox.Text = path;
-                }
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Properties.Settings.Default.filePath = openFileDialog1.FileName;
+                Properties.Settings.Default.Save();
+                path = openFileDialog1.FileName;
+                pathBox.Text = path;
             }
+        }
 
         void tickk(object sender, EventArgs e)
         {
             tick2(dialog, txtbox, uname, path);
         }
-        
+
 
         static void tick2(OpenFileDialog openFileDialog, TextBox textBox1, string userName, string path)
         {
@@ -68,7 +68,7 @@ namespace apbstat
             Stream stream = File.Open(@path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             stream.Close();
             //testtest
-            textBox1.AppendText(DateTime.Now.ToString("HH:mm:ss") + " - Reading... \n Found " + kills + " kills, " + assists + " assists and "+ medals + " medals! Saving into the database!\n");
+            textBox1.AppendText(DateTime.Now.ToString("HH:mm:ss") + " - Reading... \n Found " + kills + " kills, " + assists + " assists and " + medals + " medals! Saving into the database!\n");
             using (WebClient client = new WebClient())
             {
                 string htmlCode = client.DownloadString("http://www.prechcik.pl/apbinsert.php?user=" + userName + "&kills=" + kills + "&assists=" + assists + "&medals= " + medals);
@@ -89,10 +89,10 @@ namespace apbstat
                 if (line.Contains(word))
                 {
                     total++;
-                } 
+                }
             }
             file.Close();
-            
+
             return "" + total;
 
         }
@@ -156,19 +156,19 @@ namespace apbstat
             }
             else
             {
-                    
-                    timer.Interval = 15000; //300000 = 5 minutes
-                    timer.Tick += new EventHandler(tickk); //add the event handler
-                    timer.Start(); //start the timer
-                    textBox1.AppendText("Starting..\n\n");
 
-                }
+                timer.Interval = 15000; //300000 = 5 minutes
+                timer.Tick += new EventHandler(tickk); //add the event handler
+                timer.Start(); //start the timer
+                textBox1.AppendText("Starting..\n\n");
+
             }
+        }
 
         private void button3_Click(object sender, EventArgs e)
         {
             timer.Stop();
             textBox1.AppendText("Stopped.\n");
         }
-        }
     }
+}
