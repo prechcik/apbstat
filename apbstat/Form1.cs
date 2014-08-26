@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.IO;
-using MySql.Data.MySqlClient;
-using System.Security.Cryptography;
-using System.Net;
-
-namespace apbstat
+﻿namespace apbstat
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Windows.Forms;
+
     public partial class Form1 : Form
     {
         OpenFileDialog dialog;
