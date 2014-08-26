@@ -1,6 +1,7 @@
 ﻿namespace apbstat
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Net;
     using System.Security.Cryptography;
@@ -28,7 +29,7 @@
             pathBox.Text = path;
         }
 
-        private static void tick2(OpenFileDialog openFileDialog, TextBox textBox1, string userName, string path)
+        private static void tick2(OpenFileDialog openFileDialog, TextBoxBase textBox1, string userName, string path)
         {
             var kills = read(path, "Kill Reward");
             var assists = read(path, "Assist Reward");
@@ -36,7 +37,7 @@
             Stream stream = File.Open(@path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             stream.Close();
 
-            //testtest
+            // testtest
             textBox1.AppendText(DateTime.Now.ToString("HH:mm:ss") + " - Reading... \n Found " + kills + " kills, " + assists + " assists and " + medals + " medals! Saving into the database!\n");
 
             using (var client = new WebClient())
@@ -61,7 +62,7 @@
 
             file.Close();
 
-            return "" + total;
+            return total.ToString(CultureInfo.InvariantCulture);
         }
 
         private void loginButton_Click(object sender, EventArgs e)
@@ -78,7 +79,7 @@
             {
                 var htmlCode = client.DownloadString("http://www.prechcik.pl/checkapb.php?user=" + usr + "&password=" + pwd);
 
-                if (htmlCode != "")
+                if (string.IsNullOrWhiteSpace(htmlCode))
                 {
                     serverStatus.Text = "Status: Login failed. Username or password may be wrong.";
                     logged = false;
@@ -101,9 +102,9 @@
             // Convert the byte array to hexadecimal string
             var sb = new StringBuilder();
 
-            for (var i = 0; i < hashBytes.Length; i++)
+            foreach (var hashByte in hashBytes)
             {
-                sb.Append(hashBytes[i].ToString("X2"));
+                sb.Append(hashByte.ToString("X2"));
             }
 
             return sb.ToString();
@@ -111,18 +112,22 @@
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "Log Files|*.log";
-            openFileDialog1.Title = "Select a TempChatSessionFile.log file inside APB/APGGame/Logs";
+            var openFileDialog1 = new OpenFileDialog
+            {
+                Filter = "Log Files|*.log",
+                Title = "Select a TempChatSessionFile.log file inside APB/APGGame/Logs"
+            };
             dialog = openFileDialog1;
 
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog() != DialogResult.OK)
             {
-                Properties.Settings.Default.filePath = openFileDialog1.FileName;
-                Properties.Settings.Default.Save();
-                path = openFileDialog1.FileName;
-                pathBox.Text = path;
+                return;
             }
+
+            Properties.Settings.Default.filePath = openFileDialog1.FileName;
+            Properties.Settings.Default.Save();
+            path = openFileDialog1.FileName;
+            pathBox.Text = path;
         }
 
         private void tickk(object sender, EventArgs e)
@@ -143,9 +148,9 @@
             }
             else
             {
-                timer.Interval = 15000; //300000 = 5 minutes
-                timer.Tick += new EventHandler(tickk); //add the event handler
-                timer.Start(); //start the timer
+                timer.Interval = 15000; // 300000 = 5 minutes
+                timer.Tick += tickk; // add the event handler
+                timer.Start(); // start the timer
                 textBox1.AppendText("Starting..\n\n");
             }
         }
