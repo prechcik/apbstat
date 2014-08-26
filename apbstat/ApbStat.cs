@@ -8,7 +8,7 @@
     using System.Text;
     using System.Windows.Forms;
 
-    public partial class Form1 : Form
+    public partial class ApbStat : Form
     {
         private readonly TextBox txtbox;
         private readonly string uname;
@@ -17,7 +17,7 @@
         private string path;
         private bool logged;
 
-        public Form1()
+        public ApbStat()
         {
             InitializeComponent();
             userName.Text = Properties.Settings.Default.userName;
