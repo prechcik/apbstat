@@ -26,8 +26,6 @@
             uname = userName.Text;
             path = Properties.Settings.Default.filePath;
             pathBox.Text = path;
-
-
         }
 
         public void button1_Click(object sender, EventArgs e)
@@ -36,7 +34,6 @@
             openFileDialog1.Filter = "Log Files|*.log";
             openFileDialog1.Title = "Select a TempChatSessionFile.log file inside APB/APGGame/Logs";
             dialog = openFileDialog1;
-
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -52,7 +49,6 @@
             tick2(dialog, txtbox, uname, path);
         }
 
-
         static void tick2(OpenFileDialog openFileDialog, TextBox textBox1, string userName, string path)
         {
             var kills = read(path, "Kill Reward");
@@ -60,21 +56,21 @@
             var medals = read(path, "Medal Awarded");
             Stream stream = File.Open(@path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             stream.Close();
+            
             //testtest
             textBox1.AppendText(DateTime.Now.ToString("HH:mm:ss") + " - Reading... \n Found " + kills + " kills, " + assists + " assists and " + medals + " medals! Saving into the database!\n");
+
             using (var client = new WebClient())
             {
                 var htmlCode = client.DownloadString("http://www.prechcik.pl/apbinsert.php?user=" + userName + "&kills=" + kills + "&assists=" + assists + "&medals= " + medals);
             }
         }
 
-
         static string read(string path, string word)
         {
             string line;
             var total = 0;
             var file = new StreamReader(@path, Encoding.UTF8);
-
 
             while ((line = file.ReadLine()) != null)
             {
@@ -83,12 +79,11 @@
                     total++;
                 }
             }
+
             file.Close();
 
             return "" + total;
-
         }
-
 
         private void loginButton_Click(object sender, EventArgs e)
         {
@@ -102,9 +97,8 @@
 
             using (var client = new WebClient())
             {
-
-
                 var htmlCode = client.DownloadString("http://www.prechcik.pl/checkapb.php?user=" + usr + "&password=" + pwd);
+
                 if (htmlCode != "")
                 {
                     serverStatus.Text = "Status: Login failed. Username or password may be wrong.";
@@ -116,7 +110,6 @@
                     logged = true;
                 }
             }
-
         }
 
         public static string CreateMD5(string input)
@@ -128,10 +121,12 @@
 
             // Convert the byte array to hexadecimal string
             var sb = new StringBuilder();
+
             for (var i = 0; i < hashBytes.Length; i++)
             {
                 sb.Append(hashBytes[i].ToString("X2"));
             }
+            
             return sb.ToString();
         }
 
@@ -148,12 +143,10 @@
             }
             else
             {
-
                 timer.Interval = 15000; //300000 = 5 minutes
                 timer.Tick += new EventHandler(tickk); //add the event handler
                 timer.Start(); //start the timer
                 textBox1.AppendText("Starting..\n\n");
-
             }
         }
 
