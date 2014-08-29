@@ -1,6 +1,12 @@
 ﻿namespace Prechcik.ApbStat.Utilities
 {
-    public class LogScanner
+    using System;
+
+    public class LogScanner : IDisposable
     {
+        public void Dispose()
+        {
+        }
+        }
     }
 }
