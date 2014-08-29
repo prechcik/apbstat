@@ -1,15 +1,14 @@
 ﻿namespace Prechcik.ApbStat
 {
     using System;
-    using System.Globalization;
-    using System.IO;
     using System.Security.Cryptography;
     using System.Text;
     using System.Windows.Forms;
 
+    using Prechcik.ApbStat.Utilities;
+
     public partial class ApbStat : Form
     {
-        private readonly Timer timer = new Timer(); // create a new timer
         private string path;
         private bool logged;
         private DBConnect conn;
@@ -25,6 +24,9 @@
             pathBox.Text = path;
         }
 
+        private string User { get; set; }
+
+        private LogScanner LogScanner { get; set; }
 
         private static string CreateMd5(string input)
         {
@@ -58,13 +60,14 @@
             {
                 logged = true;
                 serverStatus.Text = "Status: Logged in!";
+                User = usr;
             }
             else
             {
                 logged = false;
                 serverStatus.Text = "Status: Failed to log in!";
             }
-            
+
         }
 
         private void Button1Click(object sender, EventArgs e)
@@ -100,12 +103,39 @@
             else
             {
                 textBox1.AppendText("Starting..\n\n");
+                LogScanner = new LogScanner { FileLocation = path };
+
+                LogScanner.OnLogRestarted += LogScannerOnOnLogRestarted;
+                LogScanner.OnNewKillsAssistsStunsOrArrests += LogScannerOnOnNewKillsAssistsStunsOrArrests;
+
+                LogScanner.BeginLogScanning();
             }
+        }
+
+        private void LogScannerOnOnNewKillsAssistsStunsOrArrests(object sender, KillsAssistsStunsOrArrestsEventArgs args)
+        {
+            textBox1.AppendText(
+                string.Format(
+                    "Found {0} new kills, {1} new assists, {2} new stuns, {3} new arrests and {4} new medals.",
+                    args.Kills,
+                    args.Assists,
+                    args.Stuns,
+                    args.Arrests,
+                    args.Medals));
+
+            conn.insertData(User, args.Kills.ToString(), args.Assists.ToString(), args.Medals.ToString());
+        }
+
+        private void LogScannerOnOnLogRestarted(object sender, LogRestartedEventArgs args)
+        {
+            textBox1.AppendText(
+                "The log has restarted - That usually means that you've logged into a new character or that you've restarted the game.\n");
+            textBox1.AppendText("New log start time is: " + args.NewStartOfLog.ToString("u"));
         }
 
         private void Button3Click(object sender, EventArgs e)
         {
-            timer.Stop();
+            LogScanner.EndLogScanning();
             textBox1.AppendText("Stopped.\n");
         }
     }
