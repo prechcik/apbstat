@@ -74,6 +74,12 @@
     <Compile Include="DBConnect.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ArrayExtensions.cs" />
+    <Compile Include="Utilities\KillsAssistsStunsOrArrestsEventHandler.cs" />
+    <Compile Include="Utilities\KillsAssistsStunsOrArrestsEventArgs.cs" />
+    <Compile Include="Utilities\LogRestartedEventArgs.cs" />
+    <Compile Include="Utilities\LogRestartedEventHandler.cs" />
+    <Compile Include="Utilities\LogScanner.cs" />
     <EmbeddedResource Include="ApbStat.resx">
       <DependentUpon>ApbStat.cs</DependentUpon>
     </EmbeddedResource>

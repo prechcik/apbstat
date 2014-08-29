@@ -1,20 +1,14 @@
 ﻿namespace Prechcik.ApbStat
 {
     using System;
-    using System.Globalization;
-    using System.IO;
-    using System.Net;
     using System.Security.Cryptography;
     using System.Text;
     using System.Windows.Forms;
-    using Prechcik.ApbStat;
+
+    using Prechcik.ApbStat.Utilities;
 
     public partial class ApbStat : Form
     {
-        private readonly TextBox txtbox;
-        private readonly string uname;
-        private readonly Timer timer = new Timer(); // create a new timer
-        private OpenFileDialog dialog;
         private string path;
         private bool logged;
         private DBConnect conn;
@@ -26,44 +20,13 @@
             userName.Text = Properties.Settings.Default.userName;
             password.Text = Properties.Settings.Default.passWord;
             Properties.Settings.Default.Save();
-            txtbox = textBox1;
-            uname = userName.Text;
             path = Properties.Settings.Default.filePath;
             pathBox.Text = path;
         }
 
-        private void Tick2(OpenFileDialog openFileDialog, TextBoxBase textBox1, string userName, string path)
-        {
-            var kills = Read(path, "Kill Reward");
-            var assists = Read(path, "Assist Reward");
-            var medals = Read(path, "Medal Awarded");
-            Stream stream = File.Open(@path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            stream.Close();
+        private string User { get; set; }
 
-            // testtest
-            textBox1.AppendText(string.Format("{0} - Reading... \n Found {1} kills, {2} assists and {3} medals! Saving into the database!\n", DateTime.Now.ToString("HH:mm:ss"), kills, assists, medals));
-
-            conn.insertData(userName, kills, assists, medals);
-        }
-
-        private static string Read(string path, string word)
-        {
-            string line;
-            var total = 0;
-            var file = new StreamReader(@path, Encoding.UTF8);
-
-            while ((line = file.ReadLine()) != null)
-            {
-                if (line.Contains(word))
-                {
-                    total++;
-                }
-            }
-
-            file.Close();
-
-            return total.ToString(CultureInfo.InvariantCulture);
-        }
+        private LogScanner LogScanner { get; set; }
 
         private static string CreateMd5(string input)
         {
@@ -97,13 +60,14 @@
             {
                 logged = true;
                 serverStatus.Text = "Status: Logged in!";
+                User = usr;
             }
             else
             {
                 logged = false;
                 serverStatus.Text = "Status: Failed to log in!";
             }
-            
+
         }
 
         private void Button1Click(object sender, EventArgs e)
@@ -113,7 +77,6 @@
                 Filter = "Log Files|*.log",
                 Title = "Select a TempChatSessionFile.log file inside APB/APGGame/Logs"
             };
-            dialog = openFileDialog1;
 
             if (openFileDialog1.ShowDialog() != DialogResult.OK)
             {
@@ -124,11 +87,6 @@
             Properties.Settings.Default.Save();
             path = openFileDialog1.FileName;
             pathBox.Text = path;
-        }
-
-        private void Tickk(object sender, EventArgs e)
-        {
-            Tick2(dialog, txtbox, uname, path);
         }
 
         private void RegButtonClick(object sender, EventArgs e)
@@ -144,16 +102,40 @@
             }
             else
             {
-                timer.Interval = 15000; // 300000 = 5 minutes
-                timer.Tick += Tickk; // add the event handler
-                timer.Start(); // start the timer
                 textBox1.AppendText("Starting..\n\n");
+                LogScanner = new LogScanner { FileLocation = path };
+
+                LogScanner.OnLogRestarted += LogScannerOnOnLogRestarted;
+                LogScanner.OnNewKillsAssistsStunsOrArrests += LogScannerOnOnNewKillsAssistsStunsOrArrests;
+
+                LogScanner.BeginLogScanning();
             }
+        }
+
+        private void LogScannerOnOnNewKillsAssistsStunsOrArrests(object sender, KillsAssistsStunsOrArrestsEventArgs args)
+        {
+            textBox1.AppendText(
+                string.Format(
+                    "Found {0} new kills, {1} new assists, {2} new stuns, {3} new arrests and {4} new medals.",
+                    args.Kills,
+                    args.Assists,
+                    args.Stuns,
+                    args.Arrests,
+                    args.Medals));
+
+            conn.insertData(User, args.Kills.ToString(), args.Assists.ToString(), args.Medals.ToString());
+        }
+
+        private void LogScannerOnOnLogRestarted(object sender, LogRestartedEventArgs args)
+        {
+            textBox1.AppendText(
+                "The log has restarted - That usually means that you've logged into a new character or that you've restarted the game.\n");
+            textBox1.AppendText("New log start time is: " + args.NewStartOfLog.ToString("u"));
         }
 
         private void Button3Click(object sender, EventArgs e)
         {
-            timer.Stop();
+            LogScanner.EndLogScanning();
             textBox1.AppendText("Stopped.\n");
         }
     }
