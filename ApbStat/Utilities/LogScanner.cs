@@ -46,6 +46,7 @@
                         Thread.Sleep(1000);
                         continue;
                     }
+
                     var kills = CountNumberOfOccurences(newLogLines, "Kill");
                     var assists = CountNumberOfOccurences(newLogLines, "Assist");
                     var stuns = CountNumberOfOccurences(newLogLines, "Stun");
@@ -81,6 +82,12 @@
                     });
             }
         }
+
+        public void EndLogScanning()
+        {
+            IsRunning = false;
+        }
+
         public void Dispose()
         {
             EndLogScanning();
