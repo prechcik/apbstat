@@ -47,12 +47,13 @@
                         continue;
                     }
 
-                    var kills = CountNumberOfOccurences(newLogLines, "Kill");
-                    var assists = CountNumberOfOccurences(newLogLines, "Assist");
-                    var stuns = CountNumberOfOccurences(newLogLines, "Stun");
-                    var arrests = CountNumberOfOccurences(newLogLines, "Arrest");
+                    var kills = CountNumberOfOccurences(newLogLines, "Kill Reward");
+                    var assists = CountNumberOfOccurences(newLogLines, "Assist Reward");
+                    var stuns = CountNumberOfOccurences(newLogLines, "Stun Reward");
+                    var arrests = CountNumberOfOccurences(newLogLines, "Arrest Reward");
+                    var medals = CountNumberOfOccurences(newLogLines, "Medail Awarded");
 
-                    PublishNewKillsAssistsStunsOrArrests(kills, assists, stuns, arrests);
+                    PublishNewKillsAssistsStunsOrArrests(kills, assists, stuns, arrests, medals);
 
                     CurrentLineIndex = logLines.Length;
                     Thread.Sleep(10000);
@@ -60,9 +61,14 @@
             }
         }
 
-        private void PublishNewKillsAssistsStunsOrArrests(int kills, int assists, int stuns, int arrests)
+        private static int CountNumberOfOccurences(IEnumerable<string> logLines, string kill)
         {
-            if (kills <= 0 && assists <= 0 && stuns <= 0 && arrests <= 0)
+            return logLines.Count(x => x.StartsWith(string.Format("Log: [System]:  {0}", kill)));
+        }
+
+        private void PublishNewKillsAssistsStunsOrArrests(int kills, int assists, int stuns, int arrests, int medals)
+        {
+            if (kills <= 0 && assists <= 0 && stuns <= 0 && arrests <= 0 && medals <= 0)
             {
                 return;
             }
@@ -78,7 +84,8 @@
                         Kills = kills,
                         Assists = assists,
                         Stuns = stuns,
-                        Arrests = arrests
+                        Arrests = arrests,
+                        Medals = medals
                     });
             }
         }
@@ -91,11 +98,6 @@
         public void Dispose()
         {
             EndLogScanning();
-        }
-
-        private static int CountNumberOfOccurences(IEnumerable<string> logLines, string kill)
-        {
-            return logLines.Count(x => x.StartsWith(string.Format("Log: [System]:  {0} Reward - ", kill)));
         }
 
         private string[] GetNewLogContent(string[] logLines)
