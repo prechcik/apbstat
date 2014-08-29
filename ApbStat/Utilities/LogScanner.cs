@@ -1,7 +1,10 @@
 ﻿namespace Prechcik.ApbStat.Utilities
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
+    using System.Threading;
 
     public class LogScanner : IDisposable
     {
@@ -35,6 +38,14 @@
                     }
 
                     ProcessLogStartDate(logLines);
+
+                    var newLogLines = GetNewLogContent(logLines);
+
+                    if (!newLogLines.Any())
+                    {
+                        Thread.Sleep(1000);
+                        continue;
+                    }
                     CurrentLineIndex = logLines.Length;
                     Thread.Sleep(10000);
                 }
@@ -44,6 +55,23 @@
         {
             EndLogScanning();
         }
+        private string[] GetNewLogContent(string[] logLines)
+        {
+            int subArrayStartIndex;
+            int subArrayLength;
+            if (CurrentLineIndex <= 0)
+            {
+                subArrayStartIndex = 0;
+                subArrayLength = logLines.Length;
+            }
+            else
+            {
+                subArrayStartIndex = CurrentLineIndex - 1;
+                subArrayLength = logLines.Length - CurrentLineIndex;
+            }
+
+            var newLogLines = logLines.SubArray(subArrayStartIndex, subArrayLength);
+            return newLogLines;
         }
 
         private void ProcessLogStartDate(string[] logLines)
