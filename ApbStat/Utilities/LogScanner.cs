@@ -8,6 +8,8 @@
 
     public class LogScanner : IDisposable
     {
+        private const int SleepTimeInMillis = 60000;
+
         public event KillsAssistsStunsOrArrestsEventHandler OnNewKillsAssistsStunsOrArrests;
 
         public event LogRestartedEventHandler OnLogRestarted;
@@ -33,7 +35,7 @@
 
                     if (!logLines.Any() || logLines.All(string.IsNullOrWhiteSpace) || logLines.Length == CurrentLineIndex)
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(SleepTimeInMillis);
                         continue;
                     }
 
@@ -43,7 +45,7 @@
 
                     if (!newLogLines.Any())
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(SleepTimeInMillis);
                         continue;
                     }
 
@@ -56,7 +58,7 @@
                     PublishNewKillsAssistsStunsOrArrests(kills, assists, stuns, arrests, medals);
 
                     CurrentLineIndex = logLines.Length;
-                    Thread.Sleep(10000);
+                    Thread.Sleep(SleepTimeInMillis);
                 }
             }
         }
