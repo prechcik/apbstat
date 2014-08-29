@@ -7,8 +7,11 @@
         public event KillsAssistsStunsOrArrestsEventHandler OnNewKillsAssistsStunsOrArrests;
 
         public event LogRestartedEventHandler OnLogRestarted;
+
+        private bool IsRunning { get; set; }
         public void Dispose()
         {
+            EndLogScanning();
         }
         }
     }
