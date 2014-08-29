@@ -7,6 +7,7 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Windows.Forms;
+    using Prechcik.ApbStat;
 
     public partial class ApbStat : Form
     {
@@ -16,9 +17,11 @@
         private OpenFileDialog dialog;
         private string path;
         private bool logged;
+        private DBConnect conn;
 
         public ApbStat()
         {
+            conn = new DBConnect();
             InitializeComponent();
             userName.Text = Properties.Settings.Default.userName;
             password.Text = Properties.Settings.Default.passWord;
@@ -29,7 +32,7 @@
             pathBox.Text = path;
         }
 
-        private static void Tick2(OpenFileDialog openFileDialog, TextBoxBase textBox1, string userName, string path)
+        private void Tick2(OpenFileDialog openFileDialog, TextBoxBase textBox1, string userName, string path)
         {
             var kills = Read(path, "Kill Reward");
             var assists = Read(path, "Assist Reward");
@@ -40,10 +43,7 @@
             // testtest
             textBox1.AppendText(string.Format("{0} - Reading... \n Found {1} kills, {2} assists and {3} medals! Saving into the database!\n", DateTime.Now.ToString("HH:mm:ss"), kills, assists, medals));
 
-            using (var client = new WebClient())
-            {
-                var htmlCode = client.DownloadString(string.Format("http://www.prechcik.pl/apbinsert.php?user={0}&kills={1}&assists={2}&medals= {3}", userName, kills, assists, medals));
-            }
+            conn.insertData(userName, kills, assists, medals);
         }
 
         private static string Read(string path, string word)
@@ -93,21 +93,17 @@
 
             pwd = CreateMd5(pwd);
 
-            using (var client = new WebClient())
+            if (conn.checkaccount(usr, pwd) == true)
             {
-                var htmlCode = client.DownloadString(string.Format("http://www.prechcik.pl/checkapb.php?user={0}&password={1}", usr, pwd));
-
-                if (string.IsNullOrWhiteSpace(htmlCode))
-                {
-                    serverStatus.Text = "Status: Login failed. Username or password may be wrong.";
-                    logged = false;
-                }
-                else
-                {
-                    serverStatus.Text = "Status: Logged in!";
-                    logged = true;
-                }
+                logged = true;
+                serverStatus.Text = "Status: Logged in!";
             }
+            else
+            {
+                logged = false;
+                serverStatus.Text = "Status: Failed to log in!";
+            }
+            
         }
 
         private void Button1Click(object sender, EventArgs e)
