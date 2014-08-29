@@ -42,6 +42,7 @@
             this.pathBox = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.scannerBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -170,7 +171,11 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.Button3Click);
             // 
-            // Form1
+            // scannerBackgroundWorker
+            // 
+            this.scannerBackgroundWorker.WorkerSupportsCancellation = true;
+            // 
+            // ApbStat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -183,7 +188,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.groupBox1);
-            this.Name = "Form1";
+            this.Name = "ApbStat";
             this.Text = "APB Stat";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -208,6 +213,7 @@
         private System.Windows.Forms.TextBox pathBox;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.ComponentModel.BackgroundWorker scannerBackgroundWorker;
     }
 }
 

@@ -128,4 +128,7 @@ The log file you have to use is located in
 
 APBFolder\APBGame\Logs\TempChatSessionFile.log</value>
   </data>
+  <metadata name="scannerBackgroundWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

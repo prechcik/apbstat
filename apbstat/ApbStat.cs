@@ -46,6 +46,17 @@
             return sb.ToString();
         }
 
+        private void AppendLineToTextbox(string line)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string>(AppendLineToTextbox), new object[] { line });
+                return;
+            }
+
+            textBox1.AppendText(string.Format("{0}{1}", line, Environment.NewLine));
+        }
+
         private void LoginButtonClick(object sender, EventArgs e)
         {
             var usr = userName.Text;
@@ -98,25 +109,29 @@
         {
             if (logged == false)
             {
-                textBox1.AppendText("You must log in first before you want to submit your statistics!\n");
+                AppendLineToTextbox("You must log in first before you want to submit your statistics!");
             }
             else
             {
-                textBox1.AppendText("Starting..\n\n");
-                LogScanner = new LogScanner { FileLocation = path };
+                AppendLineToTextbox("Starting...");
+                scannerBackgroundWorker.DoWork += delegate
+                    {
+                        LogScanner = new LogScanner { FileLocation = path };
 
-                LogScanner.OnLogRestarted += LogScannerOnOnLogRestarted;
-                LogScanner.OnNewKillsAssistsStunsOrArrests += LogScannerOnOnNewKillsAssistsStunsOrArrests;
+                        LogScanner.OnLogRestarted += LogScannerOnOnLogRestarted;
+                        LogScanner.OnNewKillsAssistsStunsOrArrests += LogScannerOnOnNewKillsAssistsStunsOrArrests;
 
-                LogScanner.BeginLogScanning();
+                        LogScanner.BeginLogScanning();
+                    };
+                scannerBackgroundWorker.RunWorkerAsync();
             }
         }
 
         private void LogScannerOnOnNewKillsAssistsStunsOrArrests(object sender, KillsAssistsStunsOrArrestsEventArgs args)
         {
-            textBox1.AppendText(
+            AppendLineToTextbox(
                 string.Format(
-                    "Found {0} new kills, {1} new assists, {2} new stuns, {3} new arrests and {4} new medals.\n",
+                    "Found {0} new kills, {1} new assists, {2} new stuns, {3} new arrests and {4} new medals.",
                     args.Kills,
                     args.Assists,
                     args.Stuns,
@@ -128,15 +143,15 @@
 
         private void LogScannerOnOnLogRestarted(object sender, LogRestartedEventArgs args)
         {
-            textBox1.AppendText(
-                "Changed district.\n");
-            textBox1.AppendText(string.Format("New log start time is: {0}\n", args.NewStartOfLog.ToString("u")));
+            AppendLineToTextbox("Changed district.");
+            AppendLineToTextbox(string.Format("New log start time is: {0}", args.NewStartOfLog.ToString("u")));
         }
 
         private void Button3Click(object sender, EventArgs e)
         {
             LogScanner.EndLogScanning();
-            textBox1.AppendText("Stopped.\n");
+            scannerBackgroundWorker.CancelAsync();
+            AppendLineToTextbox("Stopped");
         }
     }
 }
