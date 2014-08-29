@@ -46,15 +46,51 @@
                         Thread.Sleep(1000);
                         continue;
                     }
+                    var kills = CountNumberOfOccurences(newLogLines, "Kill");
+                    var assists = CountNumberOfOccurences(newLogLines, "Assist");
+                    var stuns = CountNumberOfOccurences(newLogLines, "Stun");
+                    var arrests = CountNumberOfOccurences(newLogLines, "Arrest");
+
+                    PublishNewKillsAssistsStunsOrArrests(kills, assists, stuns, arrests);
+
                     CurrentLineIndex = logLines.Length;
                     Thread.Sleep(10000);
                 }
+            }
+        }
+
+        private void PublishNewKillsAssistsStunsOrArrests(int kills, int assists, int stuns, int arrests)
+        {
+            if (kills <= 0 && assists <= 0 && stuns <= 0 && arrests <= 0)
+            {
+                return;
+            }
+
+            if (OnNewKillsAssistsStunsOrArrests != null)
+            {
+                OnNewKillsAssistsStunsOrArrests(
+                    this,
+                    new KillsAssistsStunsOrArrestsEventArgs
+                    {
+                        StartDate = StartOfLog,
+                        Timestamp = DateTime.Now,
+                        Kills = kills,
+                        Assists = assists,
+                        Stuns = stuns,
+                        Arrests = arrests
+                    });
             }
         }
         public void Dispose()
         {
             EndLogScanning();
         }
+
+        private static int CountNumberOfOccurences(IEnumerable<string> logLines, string kill)
+        {
+            return logLines.Count(x => x.StartsWith(string.Format("Log: [System]:  {0} Reward - ", kill)));
+        }
+
         private string[] GetNewLogContent(string[] logLines)
         {
             int subArrayStartIndex;
