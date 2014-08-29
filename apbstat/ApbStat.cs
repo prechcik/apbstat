@@ -116,7 +116,7 @@
         {
             textBox1.AppendText(
                 string.Format(
-                    "Found {0} new kills, {1} new assists, {2} new stuns, {3} new arrests and {4} new medals.",
+                    "Found {0} new kills, {1} new assists, {2} new stuns, {3} new arrests and {4} new medals.\n",
                     args.Kills,
                     args.Assists,
                     args.Stuns,
@@ -129,8 +129,8 @@
         private void LogScannerOnOnLogRestarted(object sender, LogRestartedEventArgs args)
         {
             textBox1.AppendText(
-                "The log has restarted - That usually means that you've logged into a new character or that you've restarted the game.\n");
-            textBox1.AppendText("New log start time is: " + args.NewStartOfLog.ToString("u"));
+                "Changed district.\n");
+            textBox1.AppendText(string.Format("New log start time is: {0}\n", args.NewStartOfLog.ToString("u")));
         }
 
         private void Button3Click(object sender, EventArgs e)
