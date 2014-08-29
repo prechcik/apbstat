@@ -61,6 +61,16 @@
             }
         }
 
+        public void EndLogScanning()
+        {
+            IsRunning = false;
+        }
+
+        public void Dispose()
+        {
+            EndLogScanning();
+        }
+
         private static int CountNumberOfOccurences(IEnumerable<string> logLines, string kill)
         {
             return logLines.Count(x => x.StartsWith(string.Format("Log: [System]:  {0}", kill)));
@@ -88,16 +98,6 @@
                         Medals = medals
                     });
             }
-        }
-
-        public void EndLogScanning()
-        {
-            IsRunning = false;
-        }
-
-        public void Dispose()
-        {
-            EndLogScanning();
         }
 
         private string[] GetNewLogContent(string[] logLines)
