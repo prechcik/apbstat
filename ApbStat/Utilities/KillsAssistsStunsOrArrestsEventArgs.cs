@@ -15,5 +15,7 @@
         public DateTime StartDate { get; set; }
 
         public DateTime Timestamp { get; set; }
+
+        public int Medals { get; set; }
     }
 }
