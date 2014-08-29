@@ -3,18 +3,13 @@
     using System;
     using System.Globalization;
     using System.IO;
-    using System.Net;
     using System.Security.Cryptography;
     using System.Text;
     using System.Windows.Forms;
-    using Prechcik.ApbStat;
 
     public partial class ApbStat : Form
     {
-        private readonly TextBox txtbox;
-        private readonly string uname;
         private readonly Timer timer = new Timer(); // create a new timer
-        private OpenFileDialog dialog;
         private string path;
         private bool logged;
         private DBConnect conn;
@@ -26,44 +21,10 @@
             userName.Text = Properties.Settings.Default.userName;
             password.Text = Properties.Settings.Default.passWord;
             Properties.Settings.Default.Save();
-            txtbox = textBox1;
-            uname = userName.Text;
             path = Properties.Settings.Default.filePath;
             pathBox.Text = path;
         }
 
-        private void Tick2(OpenFileDialog openFileDialog, TextBoxBase textBox1, string userName, string path)
-        {
-            var kills = Read(path, "Kill Reward");
-            var assists = Read(path, "Assist Reward");
-            var medals = Read(path, "Medal Awarded");
-            Stream stream = File.Open(@path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            stream.Close();
-
-            // testtest
-            textBox1.AppendText(string.Format("{0} - Reading... \n Found {1} kills, {2} assists and {3} medals! Saving into the database!\n", DateTime.Now.ToString("HH:mm:ss"), kills, assists, medals));
-
-            conn.insertData(userName, kills, assists, medals);
-        }
-
-        private static string Read(string path, string word)
-        {
-            string line;
-            var total = 0;
-            var file = new StreamReader(@path, Encoding.UTF8);
-
-            while ((line = file.ReadLine()) != null)
-            {
-                if (line.Contains(word))
-                {
-                    total++;
-                }
-            }
-
-            file.Close();
-
-            return total.ToString(CultureInfo.InvariantCulture);
-        }
 
         private static string CreateMd5(string input)
         {
@@ -113,7 +74,6 @@
                 Filter = "Log Files|*.log",
                 Title = "Select a TempChatSessionFile.log file inside APB/APGGame/Logs"
             };
-            dialog = openFileDialog1;
 
             if (openFileDialog1.ShowDialog() != DialogResult.OK)
             {
@@ -124,11 +84,6 @@
             Properties.Settings.Default.Save();
             path = openFileDialog1.FileName;
             pathBox.Text = path;
-        }
-
-        private void Tickk(object sender, EventArgs e)
-        {
-            Tick2(dialog, txtbox, uname, path);
         }
 
         private void RegButtonClick(object sender, EventArgs e)
@@ -144,9 +99,6 @@
             }
             else
             {
-                timer.Interval = 15000; // 300000 = 5 minutes
-                timer.Tick += Tickk; // add the event handler
-                timer.Start(); // start the timer
                 textBox1.AppendText("Starting..\n\n");
             }
         }
