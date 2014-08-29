@@ -53,7 +53,7 @@
                     var assists = CountNumberOfOccurences(newLogLines, "Assist Reward");
                     var stuns = CountNumberOfOccurences(newLogLines, "Stun Reward");
                     var arrests = CountNumberOfOccurences(newLogLines, "Arrest Reward");
-                    var medals = CountNumberOfOccurences(newLogLines, "Medail Awarded");
+                    var medals = CountNumberOfOccurences(newLogLines, "Medal Awarded");
 
                     PublishNewKillsAssistsStunsOrArrests(kills, assists, stuns, arrests, medals);
 
