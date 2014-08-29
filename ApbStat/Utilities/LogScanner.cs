@@ -9,6 +9,8 @@
 
         public event LogRestartedEventHandler OnLogRestarted;
 
+        public DateTime StartOfLog { get; set; }
+
         public string FileLocation { get; set; }
 
         private bool IsRunning { get; set; }
@@ -31,6 +33,8 @@
                         Thread.Sleep(1000);
                         continue;
                     }
+
+                    ProcessLogStartDate(logLines);
                     CurrentLineIndex = logLines.Length;
                     Thread.Sleep(10000);
                 }
@@ -40,6 +44,24 @@
         {
             EndLogScanning();
         }
+        }
+
+        private void ProcessLogStartDate(string[] logLines)
+        {
+            var logStartDate = ExtractStartOfLogDateTime(logLines);
+
+            if (logStartDate != StartOfLog)
+            {
+                OnLogRestarted(this, new LogRestartedEventArgs { OldStartOfLog = StartOfLog, NewStartOfLog = logStartDate });
+            }
+
+            StartOfLog = logStartDate;
+        }
+
+        private DateTime ExtractStartOfLogDateTime(string[] logLines)
+        {
+            var startDateLogLine = logLines[1].Replace("Log: ", string.Empty);
+            return DateTime.Parse(startDateLogLine);
         }
     }
 }
